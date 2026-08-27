@@ -536,7 +536,3 @@ where salary is not null) as t1
 ```
 
 
-
-
--- Paste your Question 15 Stored Procedure code here tomorrow
-```
