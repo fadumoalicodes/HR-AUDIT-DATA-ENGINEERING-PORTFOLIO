@@ -444,12 +444,99 @@ where salary is not null
 * **Business Question:** To mimic high-volume production speeds, we need a data staging script that unifies our workforce, transforms text fields into uniform uppercase formats, extracts tracking markers from the right side of the IDs, and filters fields based on string patterns using an optimal script lifecycle. Can we build this staging environment?
 
 ```sql
--- Paste your Question 14 View code here tomorrow
+
+
+USE SQLTUTORIAL
+GO
+
+DROP PROCEDURE IF EXISTS COMBINEDSTAFF
+GO
+
+CREATE PROCEDURE COMBINEDSTAFF
+AS
+BEGIN
+SELECT ED.EmployeeID,  ED.FirstName, ED.LastName
+FROM [SQLTUTORIAL].DBO.EMPLOYEEDEMOGRAPHICS AS ED
+UNION ALL
+SELECT WD.EmployeeID, WD.FirstName, WD.LastName
+FROM [SQLTUTORIAL].DBO.WarehouseEmployeeDemographics AS WD
+END
+
+USE SQLTUTORIAL
+GO
+
+DROP TABLE IF EXISTS #STAGINGTABLE
+GO
+
+CREATE TABLE #STAGINGTABLE
+(EmployeeID varchar(50), FirstName varchar(50), LastName varchar(50))
+
+INSERT INTO #STAGINGTABLE
+EXEC COMBINEDSTAFF
+GO
+
+SELECT RIGHT(EmployeeID, 3) as TRACKINGNUMBER, UPPER(FirstName) as CapitalisedFirstName, UPPER(LastName) as CapitalisedLastName
+FROM #STAGINGTABLE
+where FirstName like 's%'
 ```
 
 ### QUESTION 15: The Master HR Control Script
 * **Business Question:** Management wants the definitive capstone script for our reporting suite. It must be an automated procedure that runs a three-stage data pipeline to combine facility records, clean spacing, make text lowercase, calculate peak company limits, stage everything in a temporary table, and assign range tiers. Can we deploy this master hub?
 
-```sql
+```
+
+
+
+use SQLTUTORIAL
+go
+
+
+drop procedure if exists combinedstaffsalary
+go
+
+create procedure combinedstaffsalary
+as
+begin 
+select combinedstaff.EmployeeID, combinedstaff.FirstName, combinedstaff.LastName, es.Salary
+from 
+(select ed.EmployeeID, ed.FirstName, ed.LastName
+from [SQLTUTORIAL].dbo.EMPLOYEEDEMOGRAPHICS as ed
+union all
+select wd.EmployeeID, wd.FirstName, wd.LastName
+from [SQLTUTORIAL].dbo.WarehouseEmployeeDemographics as wd) as combinedstaff
+left join [SQLTUTORIAL].dbo.EmployeeSalary as es
+on combinedstaff.EmployeeID = es.EmployeeID
+end
+
+go
+
+use SQLTUTORIAL
+go
+
+drop table if exists #tieredsalaries
+go
+
+create table #tieredsalaries
+(EmployeeID varchar(50), FirstName varchar(50), LastName varchar(50), Salary int)
+
+insert into #tieredsalaries
+exec combinedstaffsalary
+go
+
+
+select row_number() over (partition by t1.MaxSalaryDeviationTiers order by Salary DESC) as RowNumber,  t1.TrimmedEmployeeID, t1.TrimmedFirstName, t1.TrimmedandLowerCaseLastName, t1.Salary, t1.MaxSalaryCompanyWide, t1.DeviationFromTheMaxSalaryCompanyWide, t1.MaxSalaryDeviationTiers, dense_rank() over (partition by t1.MaxSalaryDeviationTiers Order by Salary DESC) as RankInEachTier
+from  
+(
+select trim(EmployeeID) as TrimmedEmployeeID, trim(FirstName) as TrimmedFirstName, trim(lower(lastname)) as TrimmedandLowerCaseLastName, Salary,   Max(Salary) over () As MaxSalaryCompanyWide, ((Max(Salary) over ()) - Salary) as DeviationFromTheMaxSalaryCompanyWide, Case 
+WHEN ((Max(Salary) over ()) - Salary) < 25000 then 'Executive Tier'
+ELSE 'Standard Tier'
+END as MaxSalaryDeviationTiers
+from #tieredsalaries
+where salary is not null) as t1
+```
+
+
+
+
 -- Paste your Question 15 Stored Procedure code here tomorrow
 ```
