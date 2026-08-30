@@ -303,7 +303,7 @@ FROM #MANAGEMENTSALARIES AS #M1
 
 ---
 
-## Part 3: Upper-Intermediate Analytics
+## Part 3: Deeper Analytics
 
 ### QUESTION 11: Flagging Managers and Pay Differences
 * **Business Question:** Our finance team needs a re-runnable tool that blends our entire workforce roster together and automatically flags which employees hold management positions based on their job titles. Right next to that flag, we need to show the exact difference between each employee's salary and the overall corporate average pay, calculated dynamically in a single pass without slowing down the database server.
