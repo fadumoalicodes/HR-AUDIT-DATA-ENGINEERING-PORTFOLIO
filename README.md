@@ -137,7 +137,7 @@ order by MATCHES
 ```
 ---
 
-## Part 2: 
+## Part 2
 
 ### QUESTION 6: Generating Security Badge Codes
 * **Business Question:** Security operations needs an automated process that generates security badge codes for warehouse workers by blending pieces of their names with the end of their employee identification numbers. Can we build a reusable tool to output these codes?
