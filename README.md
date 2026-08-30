@@ -1,10 +1,10 @@
-# T-SQL Data Engineering Portfolio
+# HR  Data Engineering Portfolio
 
 This repository contains a master collection of business reporting scripts built inside Microsoft SQL Server (T-SQL). It shows how to combine split workforce tables, clean data entry errors, and calculate advanced payroll metrics row-by-row without slowing down the server.
 
 ### Technical Skills
 * **Database Language:** T-SQL (Microsoft SQL Server)
-* **Core Skills:** Stored Procedures, Temporary Tables,  Views, Multi-Table JOINS, Chained CTEs, Nested Subqueries, UNION ALL, Window Functions, and Data Cleaning.
+* **Core Skills:** Stored Procedures, Temporary Tables,  Views, JOINS, Chained CTEs, Nested Subqueries, UNION ALL, Window Functions, and Data Cleaning.
 
 ## Part 1: Staging and Foundational Data Cleaning
 
